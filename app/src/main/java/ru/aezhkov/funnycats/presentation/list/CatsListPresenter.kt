@@ -13,19 +13,32 @@ class CatsListPresenter
 @Inject constructor(
     private val getCatsListUseCase: GetCatsListUseCase
 ) : BasePresenter<CatsListView>() {
-
+    private var page = 0
+    private val catsList = mutableListOf<CatUiModel>()
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+        loadCats()
+    }
+
+    private fun loadCats() {
         unsubscribeOnDestroy(
-            getCatsListUseCase.getCats(0)
+            getCatsListUseCase.getCats(page)
                 .map { mapToUiModels(it) }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ viewState.updateList(it) }, { viewState.showError(it) })
+                .subscribe({
+                    catsList.addAll(it)
+                    viewState.updateList(catsList)
+                }, { viewState.showError(it) })
         )
     }
 
     private fun mapToUiModels(list: List<CatsModel>): List<CatUiModel> {
         return list.map { CatUiModel(it.id, it.url) }
+    }
+
+    fun loadMore() {
+        page++
+        loadCats()
     }
 
 

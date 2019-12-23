@@ -11,6 +11,7 @@ import ru.aezhkov.funnycats.presentation.di.CatsListComponent
 import ru.aezhkov.funnycats.presentation.di.DaggerCatsListComponent
 import ru.aezhkov.funnycats.presentation.list.adapter.CatsListAdapter
 import ru.aezhkov.funnycats.presentation.list.model.CatUiModel
+import ru.aezhkov.funnycats.presentation.list.view.OnLoadMoreListener
 import javax.inject.Inject
 
 class MainActivity : MvpAppCompatActivity(), CatsListView {
@@ -31,7 +32,11 @@ class MainActivity : MvpAppCompatActivity(), CatsListView {
         setContentView(R.layout.activity_main)
 
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = GridLayoutManager(this, 3)
+        val gridLayoutManager = GridLayoutManager(this, 3)
+        recyclerView.layoutManager = gridLayoutManager
+        recyclerView.addOnScrollListener(OnLoadMoreListener(gridLayoutManager) {
+            presenter.loadMore()
+        })
     }
 
     override fun updateList(list: List<CatUiModel>) {
