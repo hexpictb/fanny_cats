@@ -1,8 +1,13 @@
 package ru.aezhkov.funnycats.domain.interactor.list
 
-import io.reactivex.Single
+import io.reactivex.Observable
 import ru.aezhkov.funnycats.data.list.model.CatsModel
 
 interface GetCatsListUseCase {
-    fun getCats(page:Int):Single<List<CatsModel>>
+
+    fun observeCats(): Observable<List<CatsModel>>
+
+    fun loadFirstPage()
+
+    fun loadNextPage()
 }

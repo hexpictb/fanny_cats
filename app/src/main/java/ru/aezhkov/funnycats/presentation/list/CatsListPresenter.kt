@@ -13,32 +13,44 @@ class CatsListPresenter
 @Inject constructor(
     private val getCatsListUseCase: GetCatsListUseCase
 ) : BasePresenter<CatsListView>() {
-    private var page = 0
-    private val catsList = mutableListOf<CatUiModel>()
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        loadCats()
-    }
 
-    private fun loadCats() {
         unsubscribeOnDestroy(
-            getCatsListUseCase.getCats(page)
+            getCatsListUseCase.observeCats()
                 .map { mapToUiModels(it) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    catsList.addAll(it)
-                    viewState.updateList(catsList)
+                    viewState.updateList(it)
                 }, { viewState.showError(it) })
         )
+        getCatsListUseCase.loadFirstPage()
     }
 
+
     private fun mapToUiModels(list: List<CatsModel>): List<CatUiModel> {
-        return list.map { CatUiModel(it.id, it.url) }
+        return list.map {
+            CatUiModel(it.id, it.url, it.isFavorites)
+                .apply {
+                    favoritesClickListener = { favoriteCatId -> handleFavoriteClick(favoriteCatId) }
+                }
+        }
+    }
+
+    private fun handleFavoriteClick(favoriteCatId: String) {
+        val newCatsList = catsList.map { catUiModel ->
+            if (catUiModel.id == favoriteCatId) {
+                catUiModel.copy(isFavorites = !catUiModel.isFavorites)
+            } else {
+                catUiModel
+            }
+        }
+        viewState.updateList(catsList)
     }
 
     fun loadMore() {
-        page++
-        loadCats()
+        getCatsListUseCase.loadNextPage()
     }
 
 

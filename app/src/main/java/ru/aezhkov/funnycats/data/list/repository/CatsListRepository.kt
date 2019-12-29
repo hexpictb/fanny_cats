@@ -5,6 +5,6 @@ import ru.aezhkov.funnycats.data.list.model.CatsModel
 
 interface CatsListRepository {
 
-    fun getCatsList(page: Int): Single<List<CatsModel>>
+    fun getCatsList(page:Int): Single<List<CatsModel>>
 
 }

@@ -1,6 +1,7 @@
 package ru.aezhkov.funnycats.presentation.list
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import moxy.MvpAppCompatActivity
@@ -13,6 +14,8 @@ import ru.aezhkov.funnycats.presentation.list.adapter.CatsListAdapter
 import ru.aezhkov.funnycats.presentation.list.model.CatUiModel
 import ru.aezhkov.funnycats.presentation.list.view.OnLoadMoreListener
 import javax.inject.Inject
+
+private const val COLUMNS_COUNT = 3
 
 class MainActivity : MvpAppCompatActivity(), CatsListView {
 
@@ -32,7 +35,7 @@ class MainActivity : MvpAppCompatActivity(), CatsListView {
         setContentView(R.layout.activity_main)
 
         recyclerView.adapter = adapter
-        val gridLayoutManager = GridLayoutManager(this, 3)
+        val gridLayoutManager = GridLayoutManager(this, COLUMNS_COUNT)
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.addOnScrollListener(OnLoadMoreListener(gridLayoutManager) {
             presenter.loadMore()
@@ -44,6 +47,6 @@ class MainActivity : MvpAppCompatActivity(), CatsListView {
     }
 
     override fun showError(throwable: Throwable) {
-
+        Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
     }
 }

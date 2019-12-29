@@ -11,6 +11,7 @@ import ru.aezhkov.funnycats.R
 import ru.aezhkov.funnycats.presentation.list.view.CatItemView
 
 class CatsListAdapter : ListAdapter<CatUiModel, CatsViewHolder>(CatsDiffCallback()) {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return CatsViewHolder(inflater.inflate(R.layout.cat_item_view, parent, false))
