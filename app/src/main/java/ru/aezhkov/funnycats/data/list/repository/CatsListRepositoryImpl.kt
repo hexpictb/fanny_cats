@@ -13,7 +13,7 @@ class CatsListRepositoryImpl
 ) : CatsListRepository {
 
     override fun getCatsList(page: Int): Single<List<CatsModel>> {
-        return service.getCats(page, limit = 20)
+        return service.getCats(page, limit = 40)
             .flatMap { response ->
                 favoritesIdsRepository.getFavoritesCatsIds()
                     .map { favoritesIds ->

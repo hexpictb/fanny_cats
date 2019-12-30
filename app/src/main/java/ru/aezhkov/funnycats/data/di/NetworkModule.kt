@@ -14,10 +14,7 @@ private const val MAIN_ENDPOINT = "https://api.thecatapi.com/"
 class NetworkModule {
 
     @Provides
-    fun provideOkhttp(): OkHttpClient {
-        return OkHttpClient.Builder()
-            .build()
-    }
+    fun provideOkhttp(): OkHttpClient = OkHttpClient.Builder().build()
 
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {

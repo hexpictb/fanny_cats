@@ -3,6 +3,7 @@ package ru.aezhkov.funnycats.presentation.list
 import io.reactivex.android.schedulers.AndroidSchedulers
 import moxy.InjectViewState
 import ru.aezhkov.funnycats.data.list.model.CatsModel
+import ru.aezhkov.funnycats.domain.interactor.favorites.SwitchFavoritesUseCase
 import ru.aezhkov.funnycats.domain.interactor.list.GetCatsListUseCase
 import ru.aezhkov.funnycats.presentation.base.BasePresenter
 import ru.aezhkov.funnycats.presentation.list.model.CatUiModel
@@ -11,7 +12,8 @@ import javax.inject.Inject
 @InjectViewState
 class CatsListPresenter
 @Inject constructor(
-    private val getCatsListUseCase: GetCatsListUseCase
+    private val getCatsListUseCase: GetCatsListUseCase,
+    private val switchFavoritesUseCase: SwitchFavoritesUseCase
 ) : BasePresenter<CatsListView>() {
 
     override fun onFirstViewAttach() {
@@ -21,13 +23,10 @@ class CatsListPresenter
             getCatsListUseCase.observeCats()
                 .map { mapToUiModels(it) }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    viewState.updateList(it)
-                }, { viewState.showError(it) })
+                .subscribe({ viewState.updateList(it) }, { viewState.showError(it) })
         )
         getCatsListUseCase.loadFirstPage()
     }
-
 
     private fun mapToUiModels(list: List<CatsModel>): List<CatUiModel> {
         return list.map {
@@ -39,14 +38,7 @@ class CatsListPresenter
     }
 
     private fun handleFavoriteClick(favoriteCatId: String) {
-        val newCatsList = catsList.map { catUiModel ->
-            if (catUiModel.id == favoriteCatId) {
-                catUiModel.copy(isFavorites = !catUiModel.isFavorites)
-            } else {
-                catUiModel
-            }
-        }
-        viewState.updateList(catsList)
+        switchFavoritesUseCase.switchFavorites(favoriteCatId)
     }
 
     fun loadMore() {

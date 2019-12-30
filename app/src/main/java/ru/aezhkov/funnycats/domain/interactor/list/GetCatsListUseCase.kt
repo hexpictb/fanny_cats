@@ -10,4 +10,6 @@ interface GetCatsListUseCase {
     fun loadFirstPage()
 
     fun loadNextPage()
+
+    fun getCurrentList(): List<CatsModel>?
 }

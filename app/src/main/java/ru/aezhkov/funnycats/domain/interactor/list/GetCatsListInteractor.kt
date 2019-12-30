@@ -10,7 +10,9 @@ import ru.aezhkov.funnycats.data.favorites.FavoritesIdsRepository
 import ru.aezhkov.funnycats.data.list.model.CatsModel
 import ru.aezhkov.funnycats.data.list.repository.CatsListRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class GetCatsListInteractor
 @Inject constructor(
     private val repository: CatsListRepository,
@@ -24,16 +26,18 @@ class GetCatsListInteractor
 
     init {
         unsubscribeOnDispose(
-            catsLoadSubject.switchMap { repository.getCatsList(page).toObservable() }
+            catsLoadSubject.switchMapSingle { repository.getCatsList(page).subscribeOn(Schedulers.io()) }
                 .subscribeOn(Schedulers.io())
-                .subscribe {
+                .subscribe({
                     val previousList = catsResultSubject.value ?: emptyList()
                     val resultList = previousList.toMutableList()
                         .apply {
                             addAll(it)
                         }
                     catsResultSubject.onNext(resultList)
-                }
+                }, {
+                    it.toString()
+                })
 
         )
         unsubscribeOnDispose(
@@ -71,4 +75,5 @@ class GetCatsListInteractor
         compositeDisposable.add(disposable)
     }
 
+    override fun getCurrentList(): List<CatsModel>? = catsResultSubject.value
 }

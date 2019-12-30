@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Funny Cats</string>
     <string name="cats_list_title">Funny cats</string>
+    <string name="favorites_title">Избранное</string>
+    <string name="favorites_empty_message">Избранное пусто</string>
+    <string name="favorites">Избранное</string>
 </resources>
