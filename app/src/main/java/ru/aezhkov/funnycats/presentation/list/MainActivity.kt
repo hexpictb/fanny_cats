@@ -10,7 +10,7 @@ import moxy.MvpAppCompatActivity
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.aezhkov.funnycats.R
-import ru.aezhkov.funnycats.presentation.di.CatsListComponent
+import ru.aezhkov.funnycats.presentation.di.ApplicationModule
 import ru.aezhkov.funnycats.presentation.di.DaggerCatsListComponent
 import ru.aezhkov.funnycats.presentation.favorites.FavoritesActivity
 import ru.aezhkov.funnycats.presentation.list.adapter.CatsListAdapter
@@ -34,7 +34,9 @@ class MainActivity : MvpAppCompatActivity(), CatsListView {
     private val toolbar by lazy { findViewById<Toolbar>(R.id.cats_list_toolbar) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        DaggerCatsListComponent.builder().build().inject(this)
+        DaggerCatsListComponent.builder()
+            .applicationModule(ApplicationModule(this))
+            .build().inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 

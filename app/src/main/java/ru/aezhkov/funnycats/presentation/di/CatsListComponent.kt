@@ -14,7 +14,8 @@ import javax.inject.Singleton
         NetworkModule::class,
         ServiceModule::class,
         DataLayerBinder::class,
-        DomainLayerBinder::class
+        DomainLayerBinder::class,
+        ApplicationModule::class
     ]
 )
 @Singleton

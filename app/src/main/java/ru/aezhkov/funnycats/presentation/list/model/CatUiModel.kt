@@ -5,5 +5,6 @@ data class CatUiModel(
     val url: String,
     val isFavorites: Boolean
 ) {
-    var favoritesClickListener: ((ids: String) -> Unit)? = null
+    var favoritesClickListener: ((id: String) -> Unit)? = null
+    var longClickListener: ((model: CatUiModel) -> Unit)? = null
 }

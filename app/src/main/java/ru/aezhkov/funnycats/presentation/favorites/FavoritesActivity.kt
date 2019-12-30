@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.aezhkov.funnycats.R
+import ru.aezhkov.funnycats.presentation.di.ApplicationModule
 import ru.aezhkov.funnycats.presentation.di.DaggerCatsListComponent
 import ru.aezhkov.funnycats.presentation.list.adapter.CatsListAdapter
 import ru.aezhkov.funnycats.presentation.list.model.CatUiModel
@@ -27,7 +28,9 @@ class FavoritesActivity : AppCompatActivity(), FavoritesView {
     private val adapter = CatsListAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        DaggerCatsListComponent.builder().build().inject(this)
+        DaggerCatsListComponent.builder()
+            .applicationModule(ApplicationModule(this))
+            .build().inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.favorite_screen_layout)
 

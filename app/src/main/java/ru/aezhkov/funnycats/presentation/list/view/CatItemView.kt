@@ -26,6 +26,10 @@ class CatItemView
         imageButton.setOnClickListener {
             model.favoritesClickListener?.invoke(model.id)
         }
+        setOnLongClickListener {
+            model.longClickListener?.invoke(model)
+            return@setOnLongClickListener true
+        }
     }
 
     override fun bind(model: CatUiModel) {
@@ -38,7 +42,7 @@ class CatItemView
         setFavoritesIcon(model.isFavorites)
     }
 
-    private fun setFavoritesIcon(isFavorites:Boolean) {
+    private fun setFavoritesIcon(isFavorites: Boolean) {
         val favoritesIconResId = if (isFavorites) {
             R.drawable.ic_favorite_on
         } else {

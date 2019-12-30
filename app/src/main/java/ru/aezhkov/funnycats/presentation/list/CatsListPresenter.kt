@@ -6,6 +6,7 @@ import ru.aezhkov.funnycats.data.list.model.CatsModel
 import ru.aezhkov.funnycats.domain.interactor.favorites.SwitchFavoritesUseCase
 import ru.aezhkov.funnycats.domain.interactor.list.GetCatsListUseCase
 import ru.aezhkov.funnycats.presentation.base.BasePresenter
+import ru.aezhkov.funnycats.presentation.base.DownloadManagerWrapper
 import ru.aezhkov.funnycats.presentation.list.model.CatUiModel
 import javax.inject.Inject
 
@@ -13,7 +14,8 @@ import javax.inject.Inject
 class CatsListPresenter
 @Inject constructor(
     private val getCatsListUseCase: GetCatsListUseCase,
-    private val switchFavoritesUseCase: SwitchFavoritesUseCase
+    private val switchFavoritesUseCase: SwitchFavoritesUseCase,
+    private val downloadManagerWrapper: DownloadManagerWrapper
 ) : BasePresenter<CatsListView>() {
 
     override fun onFirstViewAttach() {
@@ -33,6 +35,9 @@ class CatsListPresenter
             CatUiModel(it.id, it.url, it.isFavorites)
                 .apply {
                     favoritesClickListener = { favoriteCatId -> handleFavoriteClick(favoriteCatId) }
+                    longClickListener = { model ->
+                        downloadManagerWrapper.startDownload(model)
+                    }
                 }
         }
     }
