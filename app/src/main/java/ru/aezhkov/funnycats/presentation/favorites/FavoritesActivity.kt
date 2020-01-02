@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import moxy.MvpAppCompatActivity
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.aezhkov.funnycats.R
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 private const val COLUMNS_COUNT = 3
 
-class FavoritesActivity : AppCompatActivity(), FavoritesView {
+class FavoritesActivity : MvpAppCompatActivity(), FavoritesView {
+
     @Inject
     @InjectPresenter
     lateinit var presenter: FavoritesPresenter

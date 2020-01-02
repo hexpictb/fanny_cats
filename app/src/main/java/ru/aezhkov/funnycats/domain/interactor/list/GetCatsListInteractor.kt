@@ -58,8 +58,9 @@ class GetCatsListInteractor
         )
     }
 
-    override fun observeCats(): Observable<List<CatsModel>> =
-        catsResultSubject.doOnDispose { compositeDisposable.clear() }
+    override fun observeCats(): Observable<List<CatsModel>> {
+        return catsResultSubject.doOnDispose { compositeDisposable.clear() }
+    }
 
     override fun loadFirstPage() {
         page = 0

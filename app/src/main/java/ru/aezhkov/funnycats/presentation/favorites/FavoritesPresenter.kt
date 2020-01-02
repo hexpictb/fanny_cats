@@ -14,8 +14,10 @@ class FavoritesPresenter
 @Inject constructor(
     private val favoritesUseCase: FavoritesListUseCase
 ) : BasePresenter<FavoritesView>() {
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+
         unsubscribeOnDestroy(
             favoritesUseCase.getFavoritesCatsList()
                 .map { mapToUiModels(it) }

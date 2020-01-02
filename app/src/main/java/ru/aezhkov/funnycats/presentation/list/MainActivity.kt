@@ -62,4 +62,8 @@ class MainActivity : MvpAppCompatActivity(), CatsListView {
     override fun showError(throwable: Throwable) {
         Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
     }
+
+    override fun showMessage(messageResId: Int) {
+        Toast.makeText(this, getString(messageResId), Toast.LENGTH_SHORT).show()
+    }
 }

@@ -9,6 +9,8 @@ import ru.aezhkov.funnycats.presentation.base.BasePresenter
 import ru.aezhkov.funnycats.presentation.base.DownloadManagerWrapper
 import ru.aezhkov.funnycats.presentation.list.model.CatUiModel
 import javax.inject.Inject
+import ru.aezhkov.funnycats.R
+import ru.aezhkov.funnycats.domain.interactor.favorites.FavoritesListUseCase
 
 @InjectViewState
 class CatsListPresenter
@@ -43,7 +45,11 @@ class CatsListPresenter
     }
 
     private fun handleFavoriteClick(favoriteCatId: String) {
-        switchFavoritesUseCase.switchFavorites(favoriteCatId)
+        unsubscribeOnDestroy(
+            switchFavoritesUseCase.switchFavorites(favoriteCatId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ viewState.showMessage(R.string.switch_favorites_success) }, { viewState.showError(it) })
+        )
     }
 
     fun loadMore() {
