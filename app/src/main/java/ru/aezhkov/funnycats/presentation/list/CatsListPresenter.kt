@@ -10,7 +10,6 @@ import ru.aezhkov.funnycats.presentation.base.DownloadManagerWrapper
 import ru.aezhkov.funnycats.presentation.list.model.CatUiModel
 import javax.inject.Inject
 import ru.aezhkov.funnycats.R
-import ru.aezhkov.funnycats.domain.interactor.favorites.FavoritesListUseCase
 
 @InjectViewState
 class CatsListPresenter
@@ -19,6 +18,7 @@ class CatsListPresenter
     private val switchFavoritesUseCase: SwitchFavoritesUseCase,
     private val downloadManagerWrapper: DownloadManagerWrapper
 ) : BasePresenter<CatsListView>() {
+    private var lastLongTapperModel: CatUiModel? = null
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -38,10 +38,18 @@ class CatsListPresenter
                 .apply {
                     favoritesClickListener = { favoriteCatId -> handleFavoriteClick(favoriteCatId) }
                     longClickListener = { model ->
-                        downloadManagerWrapper.startDownload(model)
+                        lastLongTapperModel = model
+                        viewState.checkWritePermission(model)
                     }
                 }
         }
+    }
+
+    fun permissionGranted() {
+        lastLongTapperModel?.let {
+            downloadManagerWrapper.startDownload(it)
+        }
+
     }
 
     private fun handleFavoriteClick(favoriteCatId: String) {

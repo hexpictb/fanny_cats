@@ -14,4 +14,6 @@ interface CatsListView : MvpView {
     fun showError(throwable: Throwable)
 
     fun showMessage(@StringRes messageResId: Int)
+
+    fun checkWritePermission(model: CatUiModel)
 }

@@ -1,9 +1,13 @@
 package ru.aezhkov.funnycats.presentation.list
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import moxy.MvpAppCompatActivity
@@ -19,6 +23,7 @@ import ru.aezhkov.funnycats.presentation.list.view.OnLoadMoreListener
 import javax.inject.Inject
 
 private const val COLUMNS_COUNT = 3
+private const val WRITE_PERMISSION_REQUEST_CODE = 123
 
 class MainActivity : MvpAppCompatActivity(), CatsListView {
 
@@ -65,5 +70,27 @@ class MainActivity : MvpAppCompatActivity(), CatsListView {
 
     override fun showMessage(messageResId: Int) {
         Toast.makeText(this, getString(messageResId), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun checkWritePermission(model: CatUiModel) {
+        val permissionState = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (permissionState != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                WRITE_PERMISSION_REQUEST_CODE
+            )
+        } else {
+            presenter.permissionGranted()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == WRITE_PERMISSION_REQUEST_CODE) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                presenter.permissionGranted()
+            }
+        }
     }
 }
